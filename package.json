@@ -18,9 +18,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "googleapis": "^154.1.0"
-  },
-  "devDependencies": {
+    "dotenv": "^17.2.1",
+    "googleapis": "^154.1.0",
     "prettier": "^3.6.2"
   }
 }

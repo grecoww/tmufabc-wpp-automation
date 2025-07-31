@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import token from './token.json' with { type: 'json' };
 import { google } from 'googleapis';
 
@@ -12,7 +13,7 @@ const sheets = google.sheets({
 });
 
 const res = await sheets.spreadsheets.values.get({
-  spreadsheetId: '1aWnjXSqLQg7Bif8_gnLMP499KIqJrvq_yj0oal8Q0Y4',
-  range: 'default!A1:B2',
+  spreadsheetId: process.env.PLANILHA_INFO_ATLETAS,
+  range: 'Página1!B2:B',
 });
-console.log(res.data.values[0]);
+console.log(res.data.values);
