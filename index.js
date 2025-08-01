@@ -66,8 +66,10 @@ async function GetUsersInfo(nameArray) {
   return targetInfoList;
 }
 
-const defaultersNames = await GetDefaultersNames();
+export async function GetDefaultersFullInfo() {
+  const defaultersNames = await GetDefaultersNames();
 
-const defaultersInfos = await GetUsersInfo(defaultersNames);
+  const defaultersInfos = await GetUsersInfo(defaultersNames);
 
-console.log(defaultersInfos);
+  return defaultersInfos;
+}
