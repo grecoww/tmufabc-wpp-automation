@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import token from './token.json' with { type: 'json' };
+import token from '.././token.json' with { type: 'json' };
 import { google } from 'googleapis';
 import Fuse from 'fuse.js';
 
@@ -58,7 +58,7 @@ async function GetUsersInfo(nameArray) {
     const targetInfo = {
       name: parsedResult[0],
       nickname: parsedResult[1] || null,
-      phoneNumber: parsedResult[4],
+      phoneNumber: parsedResult[4].replace(/[ )(-]/g, ''),
     };
     targetInfoList.push(targetInfo);
   }
@@ -66,10 +66,11 @@ async function GetUsersInfo(nameArray) {
   return targetInfoList;
 }
 
-export async function GetDefaultersFullInfo() {
+export async function GetDefaultersInfo() {
   const defaultersNames = await GetDefaultersNames();
-
   const defaultersInfos = await GetUsersInfo(defaultersNames);
-
   return defaultersInfos;
 }
+
+if (import.meta.filename === process.argv[1])
+  console.log(await GetDefaultersInfo());
