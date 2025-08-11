@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import token from '.././token.json' with { type: 'json' };
+import token from '../token.json' with { type: 'json' };
 import { google } from 'googleapis';
 import Fuse from 'fuse.js';
 
