@@ -13,7 +13,7 @@ const sheets = google.sheets({
   auth: client,
 });
 
-async function GetDefaultersNames() {
+async function getDefaultersNames() {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.PLANILHA_PAGAMENTO_ATLETAS,
     range: 'Mensalidades!B5:E',
@@ -35,7 +35,7 @@ async function GetDefaultersNames() {
   return parsedPaymentsInfo;
 }
 
-async function GetUsersInfo(nameArray) {
+async function getUsersInfo(nameArray) {
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: process.env.PLANILHA_INFO_ATLETAS,
     range: 'Página1!B2:F',
@@ -66,11 +66,11 @@ async function GetUsersInfo(nameArray) {
   return targetInfoList;
 }
 
-export async function GetDefaultersInfo() {
-  const defaultersNames = await GetDefaultersNames();
-  const defaultersInfos = await GetUsersInfo(defaultersNames);
+export async function getDefaultersInfo() {
+  const defaultersNames = await getDefaultersNames();
+  const defaultersInfos = await getUsersInfo(defaultersNames);
   return defaultersInfos;
 }
 
 if (import.meta.filename === process.argv[1])
-  console.log(await GetDefaultersInfo());
+  console.log(await getDefaultersInfo());

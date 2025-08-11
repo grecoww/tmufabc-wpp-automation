@@ -1,6 +1,5 @@
 import { makeWASocket, useMultiFileAuthState, DisconnectReason } from 'baileys';
 import QRCode from 'qrcode';
-import { GetDefaultersInfo } from './google.js';
 
 async function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
