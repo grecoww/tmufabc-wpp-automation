@@ -4,11 +4,11 @@
 import puppeteer from 'puppeteer';
 import 'dotenv/config';
 
-export async function scrapSheetId() {
+export async function scrapFinanceSheetId() {
   const date = new Date();
 
   const year = date.getFullYear().toString();
-  const monthNumber = date.getMonth();
+  const monthNumber = date.getMonth() + 1;
   const month = monthNumber.toString().padStart(2, '0');
   const monthAlias = getMonthAlias(month);
 
@@ -53,4 +53,5 @@ function getMonthAlias(monthNumber) {
   return months[monthNumber - 1];
 }
 
-if (import.meta.filename === process.argv[1]) console.log(await scrapSheetId());
+if (import.meta.filename === process.argv[1])
+  console.log(await scrapFinanceSheetId());

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import token from '../token.json' with { type: 'json' };
 import { google } from 'googleapis';
 import Fuse from 'fuse.js';
+import { scrapFinanceSheetId } from './drive.js';
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
 
@@ -13,9 +14,9 @@ const sheets = google.sheets({
   auth: client,
 });
 
-async function getDefaultersNames() {
+async function getDefaultersNames(spreadsheetId) {
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.PLANILHA_PAGAMENTO_ATLETAS,
+    spreadsheetId,
     range: 'Mensalidades!B5:E',
   });
   const paymentsInfo = res.data.values;
@@ -35,9 +36,9 @@ async function getDefaultersNames() {
   return parsedPaymentsInfo;
 }
 
-async function getUsersInfo(nameArray) {
+async function getUsersInfo(nameArray, spreadsheetId) {
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: process.env.PLANILHA_INFO_ATLETAS,
+    spreadsheetId,
     range: 'Página1!B2:F',
   });
   const usersInfo = res.data.values;
@@ -53,7 +54,11 @@ async function getUsersInfo(nameArray) {
   let targetInfoList = [];
   for (const name of nameArray) {
     const result = fuse.search(name);
-    const parsedResult = result[0].item;
+    const parsedResult = result[0]?.item;
+    if (!parsedResult) {
+      console.warn(`Atleta ${name} não encontrado na planilha`);
+      continue;
+    }
 
     const targetInfo = {
       name: parsedResult[0],
@@ -66,11 +71,16 @@ async function getUsersInfo(nameArray) {
   return targetInfoList;
 }
 
-export async function getDefaultersInfo() {
-  const defaultersNames = await getDefaultersNames();
-  const defaultersInfos = await getUsersInfo(defaultersNames);
+export async function getDefaultersInfo(financeSheetId, infoSheetId) {
+  const defaultersNames = await getDefaultersNames(financeSheetId);
+  const defaultersInfos = await getUsersInfo(defaultersNames, infoSheetId);
   return defaultersInfos;
 }
 
 if (import.meta.filename === process.argv[1])
-  console.log(await getDefaultersInfo());
+  console.log(
+    await getDefaultersInfo(
+      await scrapFinanceSheetId(),
+      process.env.PLANILHA_INFO_ATLETAS,
+    ),
+  );
